@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BC Internal Ticket Buy Form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary: #000000;
+            --accent: #b87333;
+            --accent-light: rgba(184,115,51,0.15);
+            --surface: #111111;
+            --surface2: #1a1a1a;
+            --border: #2a2a2a;
+            --border-light: #333333;
+            --success: #00c875;
+            --danger: #df2f4a;
+            --text: #ffffff;
+            --muted: #888888;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--primary);
+            background-image: url('https://bkse.com/images/hero/home.jpg');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.82);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        header, .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: #000;
+            color: white;
+            padding: 20px 28px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-logo {
+            height: 36px;
+            width: auto;
+            flex-shrink: 0;
+        }
+
+        .header-divider {
+            width: 1px;
+            height: 32px;
+            background: var(--border-light);
+        }
+
+        .header-text h1 { font-family: 'Kanit', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; }
+        .header-text p  { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 28px 16px 100px;
+        }
+
+        /* Step cards */
+        .step-card {
+            background: var(--surface);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            padding: 26px 28px;
+            margin-bottom: 14px;
+            border-left: 3px solid var(--border);
+            transition: border-color 0.2s;
+        }
+        .step-card.active   { border-left-color: var(--accent); }
+        .step-card.complete { border-left-color: var(--success); }
+
+        .step-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            margin-bottom: 6px;
+        }
+
+        .step-card h2 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+            color: var(--text);
+        }
+
+        /* Fields */
+        .field-group { margin-bottom: 16px; }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+            color: var(--muted);
+        }
+
+        label .req { color: var(--accent); margin-left: 2px; }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            font-size: 0.93rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background: var(--surface2);
+            transition: border-color 0.15s, box-shadow 0.15s;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        input::placeholder { color: #555; }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        select option { background: var(--surface2); color: var(--text); }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .helper {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        /* Event card */
+        .event-card {
+            margin-top: 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .event-img-wrap {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+        }
+
+        .event-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            display: block;
+            background: #000;
+        }
+
+        .event-card .event-name,
+        .event-card .event-meta,
+        .event-card .notes-block,
+        .event-card .waitlist-notice {
+            padding-left: 18px;
+            padding-right: 18px;
+        }
+
+        .event-card .event-name { padding-top: 14px; }
+        .event-card .event-meta { padding-bottom: 14px; }
+
+        .event-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+
+        .event-meta {
+            display: flex;
+            gap: 14px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 2px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .badge-available  { background: rgba(0,200,117,0.15); color: #00c875; border: 1px solid rgba(0,200,117,0.3); }
+        .badge-waitlist   { background: rgba(184,115,51,0.15); color: var(--accent); border: 1px solid rgba(184,115,51,0.3); }
+        .badge-postponed  { background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border-light); }
+
+        .notes-block {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--surface2);
+            border-left: 3px solid var(--accent);
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .waitlist-notice {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: rgba(184,115,51,0.1);
+            border: 1px solid rgba(184,115,51,0.3);
+            border-radius: 3px;
+            font-size: 0.82rem;
+            color: var(--accent);
+            line-height: 1.5;
+        }
+
+        /* Seating chart toggle */
+        .seating-chart-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 13px;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent);
+            background: var(--surface2);
+            user-select: none;
+            transition: background 0.15s;
+        }
+        .seating-chart-toggle:hover { background: rgba(184,115,51,0.08); }
+
+        .toggle-chevron {
+            color: var(--accent);
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        .seating-chart-toggle.open .toggle-chevron { transform: rotate(180deg); }
+
+        .seating-chart-panel {
+            display: none;
+            margin-bottom: 14px;
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .seating-chart-toggle.open + .seating-chart-panel { display: block; }
+
+        .seating-chart-img {
+            width: 100%;
+            display: block;
+        }
+
+        /* Section options */
+        .section-options { display: flex; flex-direction: column; gap: 8px; }
+
+        .section-option {
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            transition: border-color 0.15s, background 0.15s;
+            user-select: none;
+            background: var(--surface2);
+        }
+
+        .section-option:hover    { border-color: var(--accent); background: rgba(184,115,51,0.05); }
+        .section-option.selected { border-color: var(--accent); background: rgba(184,115,51,0.1); }
+
+        .sec-left { flex: 1; }
+        .sec-name   { font-weight: 600; font-size: 0.92rem; color: var(--text); }
+        .sec-detail { font-size: 0.74rem; color: var(--muted); margin-top: 3px; }
+
+        .sec-price {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-align: right;
+        }
+
+        .sec-price .tier-alt {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .sec-avail-note {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--danger);
+            background: rgba(223,47,74,0.12);
+            border: 1px solid rgba(223,47,74,0.3);
+            border-radius: 2px;
+            padding: 2px 7px;
+            margin-top: 6px;
+        }
+
+        /* Price tier picker */
+        .tier-picker {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .tier-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            background: var(--surface2);
+            transition: border-color 0.12s, background 0.12s;
+        }
+
+        .tier-option:hover    { border-color: var(--accent); background: rgba(184,115,51,0.05); }
+        .tier-option.selected { border-color: var(--accent); background: rgba(184,115,51,0.1); }
+
+        .tier-option input[type="radio"] {
+            width: 16px; height: 16px;
+            accent-color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Total */
+        .total-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface2);
+            border: 1px solid var(--accent);
+            border-radius: 3px;
+            padding: 18px 22px;
+            margin-top: 14px;
+        }
+
+        .total-display .td-label    { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+        .total-display .td-math     { font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
+        .total-display .td-amount   { font-family: 'Kanit', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--accent); letter-spacing: -0.01em; }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 22px 0;
+        }
+
+        .section-heading {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            margin-bottom: 14px;
+        }
+
+        .section-sub {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
+
+        /* Signature */
+        .sig-wrapper {
+            border: 1px solid var(--border-light);
+            border-radius: 3px;
+            overflow: hidden;
+            background: #0a0a0a;
+            position: relative;
+        }
+
+        #signature-canvas {
+            display: block;
+            width: 100%;
+            height: 130px;
+            cursor: crosshair;
+            touch-action: none;
+        }
+
+        .sig-clear {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: 1px solid var(--border-light);
+            border-radius: 2px;
+            padding: 3px 9px;
+            font-size: 0.7rem;
+            font-family: 'Inter', sans-serif;
+            color: var(--muted);
+            cursor: pointer;
+            width: auto;
+            transition: color 0.12s, border-color 0.12s;
+        }
+
+        .sig-clear:hover { color: var(--danger); border-color: var(--danger); }
+
+        .sig-foot {
+            padding: 6px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: var(--muted);
+            border-top: 1px solid var(--border);
+        }
+
+        /* Legal */
+        .legal-text {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            padding: 12px 14px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        /* Submit button */
+        .submit-btn {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 3px;
+            padding: 15px 20px;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            transition: opacity 0.15s, transform 0.1s;
+            box-shadow: 0 4px 20px rgba(184,115,51,0.3);
+        }
+
+        .submit-btn:hover   { opacity: 0.88; }
+        .submit-btn:active  { transform: scale(0.99); }
+        .submit-btn:disabled { opacity: 0.25; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Error */
+        .error-msg {
+            background: rgba(223,47,74,0.1);
+            border: 1px solid rgba(223,47,74,0.3);
+            border-radius: 3px;
+            padding: 11px 15px;
+            color: var(--danger);
+            font-size: 0.84rem;
+            margin-bottom: 14px;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+        }
+
+        .spinner {
+            width: 36px; height: 36px;
+            border: 2px solid var(--border-light);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Success */
+        .success-card {
+            text-align: center;
+            padding: 50px 24px;
+        }
+
+        .success-icon {
+            width: 60px; height: 60px;
+            background: transparent;
+            border: 2px solid var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: var(--success);
+        }
+
+        .success-card h2 { font-family: 'Kanit', sans-serif; font-size: 1.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 10px; }
+        .success-card p  { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+        .success-card a  { color: var(--accent); }
+
+        @media (max-width: 500px) {
+            .two-col { grid-template-columns: 1fr; }
+            .step-card { padding: 20px 18px; }
+            .header-divider { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="https://bkse.com/images/bkse-wht.svg" alt="BKSE" class="header-logo">
+    <div class="header-divider"></div>
+    <div class="header-text">
+        <h1>Internal Ticket Buy Form</h1>
+        <p>Barclays Center &middot; Internal Pricing &middot; All sales final</p>
+    </div>
+</header>
+
+<div class="container" id="app">
+    <div class="loading">
+        <div class="spinner"></div>
+        Loading events from catalog…
+    </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIG
+// For production: proxy API calls through a serverless function so this token
+// is never exposed to the browser. (Netlify Functions / Vercel / monday Apps)
+// ─────────────────────────────────────────────────────────────────────────────
+const CONFIG = {
+    apiToken:        'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzMDg3MDY1MSwiYWFpIjoxMSwidWlkIjo0NzcyMjE5OCwiaWFkIjoiMjAyNi0wMy0wOVQyMDoyMToyNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjM1MjA4NCwicmduIjoidXNlMSJ9.1E7hP-odzy4o_fywc93X7hP_21-r06W6YnFQ6oUyI4w',
+    catalogBoardId:  18403431328,
+    requestsBoardId: 18403431329,
+    requestsGroupId: 'group_mm1bgq9t',  // "New Requests" group
+};
+
+// ── Catalog board column IDs ──────────────────────────────────────────────────
+const CAT = {
+    date:         'date_mm1bkqjq',
+    ticketLimit:  'numeric_mm1b456f',
+    availability: 'color_mm1bn819',
+    floor:        'text_mm1bja4s',
+    llSidesPrice: 'text_mm1bp794',
+    llSidesQty:   'numeric_mm1bmvgz',
+    llEndPrice:   'text_mm1bc3xs',
+    llEndQty:     'numeric_mm1brwmy',
+    lvl100Price:  'text_mm1bs80c',
+    lvl100Qty:    'numeric_mm1b6j1a',
+    lvl200Price:  'text_mm1b8cnx',
+    lvl200Qty:    'numeric_mm1byq1w',
+    suitePrice:   'text_mm1bk2rr',
+    notes:        'long_text_mm1bwmfe',
+    imageLink:    'text_mm1bfkxt',
+};
+
+// ── Requests board column IDs ─────────────────────────────────────────────────
+const REQ = {
+    requestorName:   'text_mm1bb3na',
+    requestorEmail:  'email_mm1b4tk6',
+    mobile:          'phone_mm1b7czt',
+    internalContact: 'text_mm1byye6',
+    internalEmail:   'email_mm1bve6f',
+    section:         'dropdown_mm1b6nar',
+    numTickets:      'numeric_mm1brd4z',
+    pricePerTicket:  'text_mm1bw8c',
+    totalCharge:     'numeric_mm1btshm',
+    nameOnCard:      'text_mm1bz994',
+    billing:         'text_mm1bdvhw',
+};
+
+// ── Section definitions ───────────────────────────────────────────────────────
+const SECTION_DEFS = [
+    { key: 'floor',   label: 'Floor',               detail: '',                                                    priceCol: CAT.floor       },
+    { key: 'llSides', label: 'Lower Level Sides',   detail: 'Sections 6–10, 22–26',                               priceCol: CAT.llSidesPrice },
+    { key: 'llEnd',   label: 'Lower Level Endzone', detail: 'Sections 12–20',                                     priceCol: CAT.llEndPrice   },
+    { key: 'lvl100',  label: '100-Level',            detail: 'Sections 106–110, 122–126 · Multiples of 2 or 4',   priceCol: CAT.lvl100Price  },
+    { key: 'lvl200',  label: '200-Level',            detail: 'Sections 206–210, 222–226',                         priceCol: CAT.lvl200Price  },
+    { key: 'suite',   label: 'Suite',               detail: '',                                                    priceCol: CAT.suitePrice   },
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const state = {
+    events:          [],
+    selectedEvent:   null,
+    selectedSection: null,
+    selectedPrice:   null,
+    numTickets:      0,
+    submitted:       false,
+};
+
+// ─── API ──────────────────────────────────────────────────────────────────────
+async function mondayApi(query, variables = {}) {
+    const res = await fetch('https://api.monday.com/v2', {
+        method: 'POST',
+        headers: {
+            'Content-Type':  'application/json',
+            'Authorization': CONFIG.apiToken,
+            'API-Version':   '2024-01',
+        },
+        body: JSON.stringify({ query, variables }),
+    });
+    const json = await res.json();
+    if (json.errors?.length) throw new Error(json.errors[0].message);
+    return json.data;
+}
+
+async function loadEvents() {
+    const data = await mondayApi(`
+        query GetEvents($boardId: ID!) {
+            boards(ids: [$boardId]) {
+                items_page(limit: 100) {
+                    items {
+                        id name
+                        group { id title }
+                        column_values { id text value }
+                    }
+                }
+            }
+        }`, { boardId: String(CONFIG.catalogBoardId) });
+    return data.boards[0].items_page.items;
+}
+
+async function createRequest(fields) {
+    const itemName = `${fields.requestorName} — ${state.selectedEvent.name}`;
+    const cv = {
+        [REQ.requestorName]:   fields.requestorName,
+        [REQ.requestorEmail]:  { email: fields.requestorEmail, text: fields.requestorEmail },
+        [REQ.mobile]:          { phone: fields.mobile, countryShortName: 'US' },
+        [REQ.internalContact]: fields.internalContact,
+        [REQ.internalEmail]:   { email: fields.internalEmail, text: fields.internalEmail },
+        [REQ.section]:         state.selectedSection.label,
+        [REQ.numTickets]:      String(state.numTickets),
+        [REQ.pricePerTicket]:  `$${state.selectedPrice}`,
+        [REQ.totalCharge]:     String((state.numTickets * state.selectedPrice).toFixed(2)),
+        [REQ.nameOnCard]:      fields.nameOnCard,
+        [REQ.billing]:         fields.billing,
+    };
+    const data = await mondayApi(`
+        mutation Create($boardId: ID!, $groupId: String!, $name: String!, $cv: JSON!) {
+            create_item(board_id: $boardId, group_id: $groupId, item_name: $name, column_values: $cv) { id }
+        }`, {
+        boardId: String(CONFIG.requestsBoardId),
+        groupId: CONFIG.requestsGroupId,
+        name:    itemName,
+        cv:      JSON.stringify(cv),
+    });
+    return data.create_item.id;
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function colText(item, id) {
+    return (item.column_values.find(c => c.id === id)?.text || '').trim();
+}
+
+function availability(item) {
+    const t = colText(item, CAT.availability);
+    if (t === 'Available')   return 'available';
+    if (t === 'Waitlist')    return 'waitlist';
+    if (t === 'Postponed')   return 'postponed';
+    return 'postponed';
+}
+
+function stripNote(str) {
+    return str.replace(/\s*\([^)]*left[^)]*\)/gi, '').trim();
+}
+
+function extractNote(str) {
+    const m = str.match(/\(([^)]*left[^)]*)\)/i);
+    return m ? m[1] : null;
+}
+
+function availableSections(item) {
+    return SECTION_DEFS.map(def => {
+        const raw = colText(item, def.priceCol);
+        if (!raw || raw === 'N/A') return null;
+        const tiers = raw.split('/').map(s => s.trim()).filter(Boolean);
+        // Extract any availability note from the tiers (e.g. "10 Left")
+        const note = tiers.map(extractNote).find(Boolean) || null;
+        const cleanTiers = tiers.map(stripNote);
+        return { ...def, tiers: cleanTiers, note };
+    }).filter(Boolean);
+}
+
+function fmtDate(str) {
+    if (!str) return 'TBD';
+    const d = new Date(str + 'T12:00:00');
+    return isNaN(d) ? str : d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function parseDollars(str) {
+    const m = str.match(/\$([\d,]+\.?\d*)/);
+    return m ? parseFloat(m[1].replace(',', '')) : null;
+}
+
+function usd(n) {
+    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function render() {
+    const app = document.getElementById('app');
+    if (state.submitted) { app.innerHTML = renderSuccess(); return; }
+
+    const ev     = state.selectedEvent;
+    const sec    = state.selectedSection;
+    const price  = state.selectedPrice;
+    const qty    = state.numTickets;
+    const ready  = ev && sec && price && qty > 0;
+
+    app.innerHTML = `
+        ${renderStep1(ev)}
+        ${ev  ? renderStep2(ev, sec) : ''}
+        ${sec && price ? renderStep3(ev, sec, price, qty) : ''}
+        ${ready ? renderStep4(ev, sec, price, qty) : ''}
+    `;
+    attachHandlers();
+}
+
+function renderStep1(ev) {
+    const avail = ev ? availability(ev) : null;
+    return `
+        <div class="step-card ${ev ? 'complete' : 'active'}">
+            <div class="step-label">Step 1 of 4</div>
+            <h2>Select an Event</h2>
+            <div class="field-group">
+                <label for="ev-select">Event <span class="req">*</span></label>
+                <select id="ev-select">
+                    <option value="">— Choose an event —</option>
+                    ${['available','waitlist','postponed'].flatMap(group => {
+                        const grouped = state.events.filter(e => availability(e) === group);
+                        if (!grouped.length) return [];
+                        const label = group === 'available' ? '── Available ──'
+                                    : group === 'waitlist'  ? '── Waitlist ──'
+                                    : '── Postponed ──';
+                        return [
+                            `<option disabled>${label}</option>`,
+                            ...grouped.map(e => {
+                                const tag = group === 'waitlist' ? ' (Waitlist)' : group === 'postponed' ? ' (Postponed)' : '';
+                                const dis = group === 'postponed' ? 'disabled' : '';
+                                const sel = ev?.id === e.id ? 'selected' : '';
+                                const dateStr = fmtDate(colText(e, CAT.date));
+                                return `<option value="${e.id}" ${dis} ${sel}>${dateStr} — ${e.name}${tag}</option>`;
+                            }),
+                        ];
+                    }).join('')}
+                </select>
+            </div>
+            ${ev ? `
+            <div class="event-card">
+                ${colText(ev, CAT.imageLink) ? `
+                <div class="event-img-wrap">
+                    <img src="${colText(ev, CAT.imageLink)}" alt="${ev.name}" class="event-img" onerror="this.parentElement.style.display='none'">
+                </div>` : ''}
+                <div class="event-name">
+                    ${ev.name}
+                    <span class="badge badge-${avail}">${avail.charAt(0).toUpperCase() + avail.slice(1)}</span>
+                </div>
+                <div class="event-meta">
+                    <span>📅 ${fmtDate(colText(ev, CAT.date))}</span>
+                    <span>🎟 Max ${colText(ev, CAT.ticketLimit)} tickets/person</span>
+                </div>
+                ${colText(ev, CAT.notes) && avail !== 'waitlist' ? `<div class="notes-block">${colText(ev, CAT.notes)}</div>` : ''}
+                ${avail === 'waitlist' ? `
+                <div class="waitlist-notice">
+                    <strong>This show is currently waitlisted.</strong> Submit a request below and the box office will be in touch if tickets become available.
+                </div>` : ''}
+            </div>` : ''}
+        </div>`;
+}
+
+function renderStep2(ev, selectedSec) {
+    const sections = availableSections(ev);
+    if (!sections.length) return `
+        <div class="step-card active">
+            <div class="step-label">Step 2 of 4</div>
+            <h2>Section &amp; Pricing</h2>
+            <p style="color:var(--muted);font-size:0.9rem">No sections currently available for this event. Check back soon.</p>
+        </div>`;
+
+    return `
+        <div class="step-card ${selectedSec ? 'complete' : 'active'}">
+            <div class="step-label">Step 2 of 4</div>
+            <h2>Select Section &amp; Pricing</h2>
+            <div class="seating-chart-toggle" onclick="this.classList.toggle('open')">
+                <span>View Seating Chart</span>
+                <svg class="toggle-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="seating-chart-panel">
+                <img src="https://www.barclayscenter.com/assets/img/SeatingMap_BarclaysCenter_2025-8c459ded29.png" alt="Barclays Center Seating Chart" class="seating-chart-img">
+            </div>
+            <div class="section-options">
+                ${sections.map(sec => {
+                    const isSel = selectedSec?.key === sec.key;
+                    const hasMultiTiers = sec.tiers.length > 1;
+                    return `
+                    <div class="section-option ${isSel ? 'selected' : ''}" data-sec="${sec.key}">
+                        <div class="sec-left">
+                            <div class="sec-name">${sec.label}</div>
+                            ${sec.detail ? `<div class="sec-detail">${sec.detail}</div>` : ''}
+                            ${isSel && hasMultiTiers ? `
+                            <div class="tier-picker">
+                                <div style="font-size:0.75rem;color:var(--muted);margin-bottom:4px">Select your row / price tier:</div>
+                                ${sec.tiers.map(tier => {
+                                    const val = parseDollars(tier);
+                                    const isTSel = state.selectedPrice === val;
+                                    return `
+                                    <label class="tier-option ${isTSel ? 'selected' : ''}" data-price="${val}">
+                                        <input type="radio" name="tier" value="${val}" ${isTSel ? 'checked' : ''}>
+                                        <span>${tier}</span>
+                                    </label>`;
+                                }).join('')}
+                            </div>` : ''}
+                        </div>
+                        <div class="sec-price">
+                            ${hasMultiTiers && !isSel
+                                ? `${sec.tiers[0]}<span class="tier-alt">or ${sec.tiers.slice(1).join(' / ')}</span>`
+                                : !isSel ? sec.tiers[0]
+                                : hasMultiTiers ? '' : sec.tiers[0]}
+                            ${sec.note ? `<span class="sec-avail-note">${sec.note}</span>` : ''}
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`;
+}
+
+function renderStep3(ev, sec, price, qty) {
+    const limit = parseInt(colText(ev, CAT.ticketLimit)) || 8;
+    const total = qty * price;
+    return `
+        <div class="step-card ${qty > 0 ? 'complete' : 'active'}">
+            <div class="step-label">Step 3 of 4</div>
+            <h2>Number of Tickets</h2>
+            <div class="field-group">
+                <label for="qty-select">Quantity <span class="req">*</span></label>
+                <select id="qty-select">
+                    <option value="">— Select quantity —</option>
+                    ${Array.from({length: limit}, (_,i) => i+1).map(n =>
+                        `<option value="${n}" ${qty === n ? 'selected' : ''}>${n} ticket${n>1?'s':''}</option>`
+                    ).join('')}
+                </select>
+                <p class="helper">Max ${limit} per person for this event.</p>
+            </div>
+            ${qty > 0 ? `
+            <div class="total-display">
+                <div>
+                    <div class="td-label">Total to Charge</div>
+                    <div class="td-math">${qty} × ${usd(price)}</div>
+                </div>
+                <div class="td-amount">${usd(total)}</div>
+            </div>` : ''}
+        </div>`;
+}
+
+function renderStep4(ev, sec, price, qty) {
+    const total = qty * price;
+    return `
+        <div class="step-card active">
+            <div class="step-label">Step 4 of 4</div>
+            <h2>Your Information</h2>
+
+            <div class="field-group two-col">
+                <div>
+                    <label for="f-name">Full Name <span class="req">*</span></label>
+                    <input type="text" id="f-name" placeholder="Jane Smith" autocomplete="name">
+                </div>
+                <div>
+                    <label for="f-email">Email Address <span class="req">*</span></label>
+                    <input type="email" id="f-email" placeholder="jane@company.com" autocomplete="email">
+                </div>
+            </div>
+            <div class="field-group">
+                <label for="f-mobile">Mobile Number <span class="req">*</span></label>
+                <input type="tel" id="f-mobile" placeholder="+1 (555) 000-0000" autocomplete="tel">
+                <p class="helper">Tickets will be delivered to this number.</p>
+            </div>
+
+            <hr class="divider">
+            <div class="section-heading">Payment</div>
+
+            <div class="field-group">
+                <label for="f-cardname">Name on Card <span class="req">*</span></label>
+                <input type="text" id="f-cardname" placeholder="As it appears on the card" autocomplete="cc-name">
+            </div>
+            <div class="field-group">
+                <label for="f-billing">Billing Address <span class="req">*</span></label>
+                <input type="text" id="f-billing" placeholder="123 Main St, Apt 4B, Brooklyn, NY 11201" autocomplete="street-address">
+            </div>
+
+            <hr class="divider">
+            <div class="section-heading">Internal Contact</div>
+            <p class="section-sub">External guests must reference a BSEG internal employee. Internal staff can enter their own information.</p>
+
+            <div class="field-group two-col">
+                <div>
+                    <label for="f-ic-name">Contact Name <span class="req">*</span></label>
+                    <input type="text" id="f-ic-name" placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="f-ic-email">Contact Email <span class="req">*</span></label>
+                    <input type="email" id="f-ic-email" placeholder="jdoe@bkse.com">
+                </div>
+            </div>
+
+            <hr class="divider">
+            <div class="section-heading">Authorization</div>
+
+            <div class="legal-text">
+                By signing below you authorize a charge of <strong>${usd(total)}</strong> to your card for
+                <strong>${ev.name}</strong> — ${qty} ticket${qty>1?'s':''} in <strong>${sec.label}</strong> at ${usd(price)} each.
+                All sales are final. No refunds or exchanges. Orders are processed within 2–3 business days and tickets
+                are delivered via mobile.
+            </div>
+
+            <div class="field-group">
+                <label>Signature <span class="req">*</span></label>
+                <div class="sig-wrapper">
+                    <canvas id="signature-canvas"></canvas>
+                    <button class="sig-clear" id="sig-clear" type="button">Clear</button>
+                    <div class="sig-foot">Sign above to authorize your order</div>
+                </div>
+            </div>
+
+            <div id="form-error"></div>
+
+            <button class="submit-btn" id="submit-btn" type="button">
+                Submit Order · ${usd(total)}
+            </button>
+        </div>`;
+}
+
+function renderSuccess() {
+    return `
+        <div class="step-card">
+            <div class="success-card">
+                <div class="success-icon">✓</div>
+                <h2>Order Submitted!</h2>
+                <p>
+                    Your request for <strong>${state.selectedEvent?.name}</strong> has been received.<br>
+                    The box office team will process your order within 2–3 business days and
+                    send tickets to the mobile number you provided.<br><br>
+                    Questions? <a href="mailto:arenaboxoffice@bseglobal.net">arenaboxoffice@bseglobal.net</a>
+                </p>
+            </div>
+        </div>`;
+}
+
+// ─── SIGNATURE ────────────────────────────────────────────────────────────────
+let sigCtx, sigDrawing = false;
+let sigHasData = false;
+
+function initSignature() {
+    const canvas = document.getElementById('signature-canvas');
+    if (!canvas) return;
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.offsetWidth;
+    canvas.width  = w * dpr;
+    canvas.height = 130 * dpr;
+    sigCtx = canvas.getContext('2d');
+    sigCtx.scale(dpr, dpr);
+    sigCtx.strokeStyle = '#1a1a2e';
+    sigCtx.lineWidth   = 2;
+    sigCtx.lineCap     = 'round';
+    sigCtx.lineJoin    = 'round';
+
+    const pos = e => {
+        const r = canvas.getBoundingClientRect();
+        const s = e.touches ? e.touches[0] : e;
+        return { x: s.clientX - r.left, y: s.clientY - r.top };
+    };
+
+    canvas.addEventListener('mousedown',  e => { sigDrawing = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); });
+    canvas.addEventListener('mousemove',  e => { if (!sigDrawing) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); sigHasData = true; });
+    canvas.addEventListener('mouseup',    ()  => sigDrawing = false);
+    canvas.addEventListener('mouseleave', ()  => sigDrawing = false);
+    canvas.addEventListener('touchstart', e  => { e.preventDefault(); sigDrawing = true; sigCtx.beginPath(); const p = pos(e); sigCtx.moveTo(p.x, p.y); }, { passive: false });
+    canvas.addEventListener('touchmove',  e  => { e.preventDefault(); if (!sigDrawing) return; const p = pos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); sigHasData = true; }, { passive: false });
+    canvas.addEventListener('touchend',   ()  => sigDrawing = false);
+
+    document.getElementById('sig-clear')?.addEventListener('click', () => {
+        sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+        sigHasData = false;
+    });
+}
+
+// ─── EVENT HANDLERS ───────────────────────────────────────────────────────────
+function attachHandlers() {
+    // Event dropdown
+    document.getElementById('ev-select')?.addEventListener('change', e => {
+        state.selectedEvent   = state.events.find(ev => ev.id === e.target.value) || null;
+        state.selectedSection = null;
+        state.selectedPrice   = null;
+        state.numTickets      = 0;
+        render();
+    });
+
+    // Section option
+    document.querySelectorAll('.section-option').forEach(el => {
+        el.addEventListener('click', e => {
+            if (e.target.tagName === 'INPUT') return;
+            const key  = el.dataset.sec;
+            const sec  = availableSections(state.selectedEvent).find(s => s.key === key);
+            if (!sec) return;
+            state.selectedSection = sec;
+            state.selectedPrice   = sec.tiers.length === 1 ? parseDollars(sec.tiers[0]) : null;
+            render();
+        });
+    });
+
+    // Price tier radio
+    document.querySelectorAll('input[name="tier"]').forEach(r => {
+        r.addEventListener('change', e => {
+            state.selectedPrice = parseFloat(e.target.value);
+            render();
+        });
+    });
+
+    // Quantity
+    document.getElementById('qty-select')?.addEventListener('change', e => {
+        state.numTickets = parseInt(e.target.value) || 0;
+        render();
+    });
+
+    // Submit
+    document.getElementById('submit-btn')?.addEventListener('click', handleSubmit);
+
+    // Init signature canvas after DOM is painted
+    setTimeout(initSignature, 0);
+}
+
+async function handleSubmit() {
+    const btn    = document.getElementById('submit-btn');
+    const errDiv = document.getElementById('form-error');
+    errDiv.innerHTML = '';
+
+    const get = id => document.getElementById(id)?.value.trim() || '';
+
+    const fields = {
+        requestorName:   get('f-name'),
+        requestorEmail:  get('f-email'),
+        mobile:          get('f-mobile'),
+        nameOnCard:      get('f-cardname'),
+        billing:         get('f-billing'),
+        internalContact: get('f-ic-name'),
+        internalEmail:   get('f-ic-email'),
+    };
+
+    // Validate
+    const empty = Object.entries(fields).find(([,v]) => !v);
+    if (empty) {
+        errDiv.innerHTML = `<div class="error-msg">Please complete all required fields before submitting.</div>`;
+        return;
+    }
+    if (!sigHasData) {
+        errDiv.innerHTML = `<div class="error-msg">Please sign to authorize your order.</div>`;
+        return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+        await createRequest(fields);
+        state.submitted = true;
+        render();
+    } catch (err) {
+        console.error(err);
+        errDiv.innerHTML = `<div class="error-msg"><strong>Submission failed.</strong> ${err.message}<br>Please try again or email <a href="mailto:arenaboxoffice@bseglobal.net">arenaboxoffice@bseglobal.net</a>.</div>`;
+        btn.disabled    = false;
+        btn.textContent = `Submit Order · ${usd(state.numTickets * state.selectedPrice)}`;
+    }
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+async function init() {
+    try {
+        const items = await loadEvents();
+        // Sort: available → waitlist → postponed, then by date
+        state.events = items.sort((a, b) => {
+            const rank = { available: 0, waitlist: 1, postponed: 2 };
+            const ra = rank[availability(a)], rb = rank[availability(b)];
+            if (ra !== rb) return ra - rb;
+            return (colText(a, CAT.date) || '').localeCompare(colText(b, CAT.date) || '');
+        });
+        render();
+    } catch (err) {
+        document.getElementById('app').innerHTML = `
+            <div class="step-card">
+                <div class="error-msg">
+                    <strong>Could not load events.</strong><br>
+                    Make sure <code>CONFIG.apiToken</code> is set at the top of this file.<br>
+                    Error: ${err.message}
+                </div>
+            </div>`;
+    }
+}
+
+init();
+</script>
+</body>
+</html>
+
